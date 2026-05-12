@@ -81,22 +81,43 @@ export default function Detail() {
         <div className="absolute top-2/3 left-1/2 w-80 h-80 bg-indigo-400/20 rounded-full blur-3xl animate-pulse animation-delay-6000"></div>
       </div>
 
-      {/* Floating Particles */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-purple-500 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${10 + Math.random() * 20}s`,
-              opacity: Math.random() * 0.4,
-            }}
-          />
-        ))}
-      </div>
+      {/* Floating Particles */} 
+{/* Bagian ini membuat efek partikel kecil yang bergerak di background */}
+
+<div className="fixed inset-0 overflow-hidden pointer-events-none">
+  {/* 
+    fixed → posisi tetap di layar (tidak ikut scroll)
+    inset-0 → memenuhi seluruh layar (top, right, bottom, left = 0)
+    overflow-hidden → supaya partikel tidak keluar dari area
+    pointer-events-none → supaya tidak mengganggu klik user
+  */}
+
+  {[...Array(15)].map((_, i) => (
+    // Membuat array berisi 15 item, lalu di-loop (map)
+    // i digunakan sebagai key unik tiap partikel
+
+    <div
+      key={i} // key wajib di React untuk list
+      className="absolute w-1 h-1 bg-purple-500 rounded-full animate-float"
+      style={{
+        left: `${Math.random() * 100}%`,
+        // posisi horizontal random (0% - 100%)
+
+        top: `${Math.random() * 100}%`,
+        // posisi vertikal random (0% - 100%)
+
+        animationDelay: `${Math.random() * 10}s`,
+        // delay animasi random supaya tidak bergerak bersamaan
+
+        animationDuration: `${10 + Math.random() * 20}s`,
+        // durasi animasi antara 10 - 30 detik
+
+        opacity: Math.random() * 0.4,
+        // transparansi random (biar efek lebih natural)
+      }}
+    />
+  ))}
+</div>
 
       <div className="relative z-10 max-w-5xl mx-auto">
         
@@ -213,38 +234,7 @@ export default function Detail() {
           ))}
         </div>
 
-        {/* Additional Information Grid */}
-        <div className=" gap-6 mb-8">
-          {/* Informasi Geografis */}
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-6">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                <FaTree className="text-emerald-600 dark:text-emerald-400 text-lg" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Informasi Geografis</h3>
-            </div>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400">Ketinggian</span>
-                <span className="font-semibold text-gray-900 dark:text-white">± 500 mdpl</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400">Luas Wilayah</span>
-                <span className="font-semibold text-gray-900 dark:text-white">12.5 km²</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400">Jumlah Penduduk</span>
-                <span className="font-semibold text-gray-900 dark:text-white">8,234 jiwa</span>
-              </div>
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400">Kode Pos</span>
-                <span className="font-semibold text-gray-900 dark:text-white">80352</span>
-              </div>
-            </div>
-          </div>
-
-          
-        </div>
+        
 
       
 
@@ -267,65 +257,7 @@ export default function Detail() {
             <FaArrowLeft className="w-4 h-4 rotate-180 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
-      </div>  
-
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          50% { transform: translateY(-20px) translateX(10px); }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.05); }
-        }
-        
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out;
-        }
-        
-        .animate-float {
-          animation: float linear infinite;
-        }
-        
-        .animate-pulse {
-          animation: pulse 8s ease-in-out infinite;
-        }
-        
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient-x 3s ease infinite;
-        }
-        
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        .animation-delay-6000 { animation-delay: 6s; }
-        
-        @media print {
-          .animate-pulse, .animate-float, .animate-gradient-x {
-            animation: none;
-          }
-          button {
-            display: none;
-          }
-        }
-      `}</style>
+      </div>  x
     </div>
   );
 }

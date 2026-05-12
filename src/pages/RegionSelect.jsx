@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ProvinsiSelect from "../components/ProvinsiSelect";
-import KotaSelect from "../components/KotaSelect";
-import KecamatanSelect from "../components/KecamatanSelect";
-import KelurahanSelect from "../components/KelurahanSelect";
+import { useState, useEffect } from "react"; // Hook React untuk state dan efek (useEffect belum dipakai di sini)
+import { useNavigate } from "react-router-dom"; // Untuk navigasi halaman
+import ProvinsiSelect from "../components/ProvinsiSelect"; // Component dropdown provinsi
+import KotaSelect from "../components/KotaSelect"; // Component dropdown kota
+import KecamatanSelect from "../components/KecamatanSelect"; // Component dropdown kecamatan
+import KelurahanSelect from "../components/KelurahanSelect"; // Component dropdown kelurahan
+
+// Import icon dari react-icons
 import {
   FaArrowLeft,
   FaCheckCircle,
@@ -20,47 +22,65 @@ import {
 } from "react-icons/fa";
 
 export default function RegionSelect() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Fungsi untuk berpindah halaman
+
+  // State untuk menyimpan data wilayah yang dipilih
   const [provinsi, setProvinsi] = useState({ id: "", text: "" });
   const [kota, setKota] = useState({ id: "", text: "" });
   const [kecamatan, setKecamatan] = useState({ id: "", text: "" });
   const [kelurahan, setKelurahan] = useState({ id: "", text: "" });
-  const [activeStep, setActiveStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
 
+  const [activeStep, setActiveStep] = useState(1); // Menentukan langkah aktif (step ke berapa)
+  const [isLoading, setIsLoading] = useState(false); // Untuk menampilkan loading
+
+  // Fungsi saat user memilih provinsi
   const handleProvinsiSelect = (selected) => {
-    setIsLoading(true);
-    setProvinsi(selected);
+    setIsLoading(true); // tampilkan loading
+    setProvinsi(selected); // simpan provinsi yang dipilih
+
+    // Reset pilihan di bawahnya (karena hirarki berubah)
     setKota({ id: "", text: "" });
     setKecamatan({ id: "", text: "" });
     setKelurahan({ id: "", text: "" });
-    setActiveStep(2);
-    setTimeout(() => setIsLoading(false), 300);
+
+    setActiveStep(2); // lanjut ke step kota
+    setTimeout(() => setIsLoading(false), 300); // simulasi loading 300ms
   };
 
+  // Fungsi saat user memilih kota
   const handleKotaSelect = (selected) => {
     setIsLoading(true);
-    setKota(selected);
+    setKota(selected); // simpan kota
+
+    // Reset bawahnya
     setKecamatan({ id: "", text: "" });
     setKelurahan({ id: "", text: "" });
-    setActiveStep(3);
+
+    setActiveStep(3); // lanjut ke kecamatan
     setTimeout(() => setIsLoading(false), 300);
   };
 
+  // Fungsi saat user memilih kecamatan
   const handleKecamatanSelect = (selected) => {
     setIsLoading(true);
-    setKecamatan(selected);
+    setKecamatan(selected); // simpan kecamatan
+
+    // Reset kelurahan
     setKelurahan({ id: "", text: "" });
-    setActiveStep(4);
+
+    setActiveStep(4); // lanjut ke kelurahan
     setTimeout(() => setIsLoading(false), 300);
   };
 
+  // Fungsi saat user memilih kelurahan
   const handleKelurahanSelect = (selected) => {
-    setKelurahan(selected);
+    setKelurahan(selected); // simpan kelurahan
   };
 
+  // Mengecek apakah semua pilihan sudah lengkap
   const isComplete = provinsi.id && kota.id && kecamatan.id && kelurahan.id;
 
+  // Fungsi ketika tombol "Selesai" ditekan
   const handleSelesai = () => {
     if (isComplete) {
       navigate("/detail", {
@@ -70,20 +90,21 @@ export default function RegionSelect() {
           kecamatan,
           kelurahan,
         },
-      });
+      }); // kirim data ke halaman detail
     }
   };
 
+  // Data step untuk progress indikator
   const steps = [
     {
       id: 1,
-      name: "Provinsi",
-      icon: FaMapMarkerAlt,
-      color: "from-purple-500 to-indigo-600",
-      lightColor: "bg-purple-100 dark:bg-purple-900/30",
-      textColor: "text-purple-600 dark:text-purple-400",
-      selected: !!provinsi.id,
-      value: provinsi.text,
+      name: "Provinsi", // Nama step
+      icon: FaMapMarkerAlt, // Icon step
+      color: "from-purple-500 to-indigo-600", // warna gradient
+      lightColor: "bg-purple-100 dark:bg-purple-900/30", // background ringan
+      textColor: "text-purple-600 dark:text-purple-400", // warna teks
+      selected: !!provinsi.id, // true jika sudah dipilih
+      value: provinsi.text, // nama provinsi
     },
     {
       id: 2,
@@ -117,21 +138,28 @@ export default function RegionSelect() {
     },
   ];
 
+  // Fungsi untuk menentukan status setiap step
   const getStepStatus = (stepId) => {
+
+    // STEP 1 (Provinsi)
     if (stepId === 1)
       return provinsi.id
-        ? "completed"
+        ? "completed" // jika sudah dipilih
         : activeStep === 1
-          ? "active"
-          : "pending";
+          ? "active" // jika sedang aktif
+          : "pending"; // belum dipilih
+
+    // STEP 2 (Kota)
     if (stepId === 2)
       return kota.id
         ? "completed"
         : activeStep === 2
           ? "active"
           : provinsi.id
-            ? "pending"
-            : "locked";
+            ? "pending" // bisa dipilih jika provinsi sudah ada
+            : "locked"; // dikunci jika belum pilih provinsi
+
+    // STEP 3 (Kecamatan)
     if (stepId === 3)
       return kecamatan.id
         ? "completed"
@@ -140,6 +168,8 @@ export default function RegionSelect() {
           : kota.id
             ? "pending"
             : "locked";
+
+    // STEP 4 (Kelurahan)
     return kelurahan.id
       ? "completed"
       : activeStep === 4
@@ -481,7 +511,8 @@ export default function RegionSelect() {
                         </span>
                       </div>
                     )}
-                  </div>
+                  </div> 
+      
                   <KelurahanSelect
                     kecamatanId={kecamatan.id}
                     selectedId={kelurahan.id}
@@ -566,50 +597,6 @@ export default function RegionSelect() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-fadeInUp {
-          animation: fadeInUp 0.5s ease-out;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        
-        .animation-delay-6000 {
-          animation-delay: 6s;
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.5;
-            transform: scale(1.05);
-          }
-        }
-        
-        .animate-pulse {
-          animation: pulse 8s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }
